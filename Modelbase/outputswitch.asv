@@ -1,0 +1,104 @@
+classdef outputswitch < handle
+%% Description
+%  routes input to one of two outputs according to sw input
+%% Ports
+%  inputs: 
+%    in        incoming value
+%    sw        output selector
+%  outputs: 
+%    out1/2    outgoing entities
+%% States
+%  s:        idle
+%  s:        output
+%  value
+%  nextPort: output port of new in values
+%% System Parameters
+%  name:  object name
+%  port0: initial port
+%  debug: flag to enable debug information
+
+  properties
+    s
+    nextPort
+    value
+    name
+    port0
+    debug
+  end
+    
+  methods
+    function obj = add2(name, port0, debug)
+      obj.s = "idle";
+	 obj.nextPort = port0;
+      obj.name = name;
+      obj.debug = debug;
+    end
+        
+    function dint(obj)
+      if obj.debug
+        fprintf("%-8s entering int, being in phase %s\n", ...
+	              obj.name, obj.s)
+        showState(obj);
+	 end
+     
+	 obj.s = "idle";
+	 
+      if obj.debug
+        fprintf("%-8s leaving int, going to phase %s\n", obj.name, obj.s)
+        showState(obj);
+      end
+    end
+    
+    function dext(obj,e,x)
+      if obj.debug
+        fprintf("%-8s entering ext, being in phase %s\n", obj.name, obj.s)
+        showState(obj);
+      end
+      
+      if isfield(x, "in")
+        obj.value = x.in;
+	   obj.s = "output";
+      end
+      if isfield(x, "sw")
+        obj.port0 = x.sw;
+      end
+    
+
+      if obj.debug
+        fprintf("%-8s  leaving ext, going to phase %s\n", obj.name, obj.s)
+        showState(obj);
+      end
+    end
+    
+    function dcon(obj,e,x)
+      if obj.debug    
+        fprintf("%-8s con, in phase %s\n", obj.name, obj.s)
+      end
+      dint(obj);
+      dext(obj,e,x);
+    end
+    
+    function y = lambda(obj)
+      
+	 if obj.port0 == 0
+		y.1 = obj.value;
+	 else
+		y.2 = obj.value;
+	   
+      if obj.debug
+        fprintf("%-8s OUT, out=%2d\n", obj.name, y.out)
+      end
+    end
+        
+    function t = ta(obj)
+      if obj.state == "output"
+		t 
+    end
+    
+    function showState(obj)
+      % debug function, prints current state
+      fprintf("  phase=%s u1=%3d u2=%3d\n", obj.s, obj.u1, obj.u2);
+    end  
+
+  end
+end

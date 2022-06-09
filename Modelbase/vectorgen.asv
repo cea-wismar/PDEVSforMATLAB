@@ -1,0 +1,63 @@
+classdef vectorgen < handle
+%% Description
+%  generates given fixed output values at given times
+%  repeats cyclically
+%% Ports
+%  inputs: none
+%  outputs: 
+%    out      given values
+%% States
+%  s          running
+%  index      index of next value 
+%% System Parameters
+%  tVec: vector of output times 
+%  yVec: vector of output values 
+%  name:  object name
+%  debug: flag to enable debug information
+
+  properties
+    s
+    index
+    name
+    tVec
+    yVec
+    epsilon
+    debug
+  end
+    
+  methods
+    function obj = vectorgen(name, tVec, yVec, debug)
+      obj.s = "running";
+      obj.name = name;
+	 obj.tVec = tVec;
+	 obj.yVec = yVec;
+      obj.debug = debug;
+	 obj.epsilon = get_epsilon();
+    end
+        
+    function dint(obj)
+	   if obj.debug
+		  fprintf("%-8s delta in, index=%2d\n", obj.name, obj.index)
+	   end
+	   
+    end
+    
+    function dext(obj,e,x)
+      
+    end
+    
+    function dcon(obj,e,x)
+     
+    end
+    
+    function y = lambda(obj)
+      
+    end
+        
+    function t = ta(obj)
+     
+    end
+    
+   
+  end
+end
