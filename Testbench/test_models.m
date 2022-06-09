@@ -7,6 +7,7 @@ end
 %
 %run with: run(test_models)
 
+
 function test_model1(testCase)
 
 	act_out = model1(10);
