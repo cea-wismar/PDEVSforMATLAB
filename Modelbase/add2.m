@@ -13,6 +13,7 @@ classdef add2 < handle
 %  name:  object name
 %  debug: flag to enable debug information
 
+
   properties
     s
     u1
